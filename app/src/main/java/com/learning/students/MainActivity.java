@@ -17,11 +17,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int CAMERA_PIC_REQUEST = 3;
+    public static final int CAMERA_PIC_REQUEST = 3;
     private static final int ADD_STUDENT_REQUEST = 2;
     private static final String CURRENT_POSITION_EXTRA = "current_position";
 
@@ -97,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
                 String name = data.getStringExtra(StudentActivity.NAME_EXTRA);
                 String phone = data.getStringExtra(StudentActivity.PHONE_EXTRA);
                 String email = data.getStringExtra(StudentActivity.EMAIL_EXTRA);
-                Student student = new Student(name, phone, email, null);
+                Bitmap image = data.getParcelableExtra(StudentActivity.IMAGE_EXTRA);
+                Student student = new Student(0, name, phone, email, image); // TODO fix identifier
                 students.add(student);
                 studentsListView.getAdapter().notifyDataSetChanged();
             }
@@ -111,6 +114,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         studentsListView = findViewById(R.id.studentsListView);
         studentsListView.setLayoutManager(new LinearLayoutManager(this));
+
+        File studentsFile = new File(getFilesDir(), "students.txt");
+        try {
+            if (!studentsFile.exists()) {
+                students = Student.generate();
+                studentsFile.createNewFile();
+                Student.saveStudents(students, studentsFile);
+            } else {
+                students = Student.loadStudents(studentsFile);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         studentsListView.setAdapter(new StudentsAdapter());
 
