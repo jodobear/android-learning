@@ -167,17 +167,15 @@ public class MainActivity extends AppCompatActivity {
         studentsListView.setLayoutManager(new LinearLayoutManager(this));
 
         File studentsFile = new File(getFilesDir(), "students.txt");
-        try {
-            if (!studentsFile.exists()) {
-                students = Student.generate();
-                studentsFile.createNewFile();
-                Student.saveStudents(students, studentsFile);
-            } else {
-                students = Student.loadStudents(studentsFile);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new StudentsTask(
+                new StudentsTask.ResultCallBack() {
+                    @Override
+                    public void onStudentsReady(List<Student> localThreadStudentsFromFile) {
+                        MainActivity.this.students = localThreadStudentsFromFile;
+                        studentsListView.getAdapter().notifyDataSetChanged();
+                    }
+                }
+        ).execute(studentsFile);
 
         studentsListView.setAdapter(new StudentsAdapter());
 
@@ -203,4 +201,5 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState, outPersistentState);
         outState.putInt(CURRENT_POSITION_EXTRA, currentStudentPosition);
     }
+
 }
