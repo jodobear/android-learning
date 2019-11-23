@@ -1,12 +1,18 @@
 <resources>
-    <string name="app_name">Students</string>
-    <string name="login">Login</string>
-    <string name="register">Register</string>
-    <string name="password">Password</string>
-    <string name="wrong_password">Wrong password</string>
+    <string name="app_name">StudentsApp</string>
+    <string name="usr">Username</string>
+    <string name="register">register</string>
+    <string name="login">Log In</string>
+    <string name="pass">Password</string>
+    <string name="wrong_password">Wrong Password</string>
     <string name="wrong_login">Wrong login</string>
-    <string name="add_student">Add Student</string>
-    <string name="full_name">Full name</string>
-    <string name="email">Email</string>
-    <string name="phone">Phone</string>
+    <string name="usernamempty">Sorry, your username is empty</string>
+    <string name="changepass">Change Password</string>
+    <string name="newPass">New Password</string>
+    <string name="reset">Reset</string>
+    <string name="passempty">Sorry, enter a non empty Pasword</string>
+    <string name="success">Successfully Changed the Password!</string>
+    <string name="successreg">Successfully Registered User!</string>
+    <string name="unsuccessreg">Sorry, you have entered the wrong password, Can\'t change username!</string>
+    <string name="takePhoto">Take a Photo</string>
 </resources>
