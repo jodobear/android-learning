@@ -1,5 +1,6 @@
 package com.learning.students;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -29,10 +30,7 @@ class Student {
         this.email = email;
         this.photo = photo;
     }
-
-    public String getImageFileName() {
-        return "image_" + id + ".png";
-    }
+    public String getImageFileName() { return "image_" + id + ".png";}
 
     public String getFullName() {
         return fullName;
@@ -68,20 +66,25 @@ class Student {
 
     public static List<Student> generate() {
         List<Student> students = new ArrayList<>(1000);
-        for (int i = 0; i < 1000; ++i) {
+        for (int i = 0; i < 1000; i++) {
             students.add(new Student(
                     i,
                     "student" + i,
                     "phone" + i,
                     "email" + i + "@com",
                     null
+
             ));
         }
         return students;
     }
 
-    public static String convertToString(Student student) {
-        return student.id + "," + student.fullName + "," + student.phoneNumber + "," + student.email;
+    // storing students as string in csv format
+    public static String convertToString(Student student){
+        return student.id + "," +
+                student.fullName + "," +
+                student.phoneNumber + "," +
+                student.email;
     }
 
     public static Student loadFromString(String text) {
@@ -99,7 +102,7 @@ class Student {
         }
         File photosDir = new File(file.getParentFile(), "photos");
         photosDir.mkdir();
-        for (Student student : students) {
+        for(Student student: students) {
             student.saveImage(photosDir);
         }
     }
@@ -115,25 +118,24 @@ class Student {
                 students.add(loadFromString(text));
             }
         }
-        File photosDir = new File(file.getParentFile(), "photos");
-        for (Student student : students) {
-            student.loadImage(photosDir);
+        for (Student student: students) {
+            student.loadImage(file.getParentFile());
         }
         return students;
     }
 
-    public void saveImage(File photosDirectory) throws IOException {
+    public void saveImage(File photosDir) throws IOException {
         if (photo != null) {
-            File imageFile = new File(photosDirectory, getImageFileName());
+            File imageFile = new File(photosDir, getImageFileName());
             imageFile.createNewFile();
-            try (FileOutputStream stream = new FileOutputStream(imageFile)) {
+            try(FileOutputStream stream = new FileOutputStream(imageFile)) {
                 photo.compress(Bitmap.CompressFormat.PNG, 0, stream);
             }
         }
     }
 
-    public void loadImage(File photosDirectory) throws IOException {
-        File imageFile = new File(photosDirectory, getImageFileName());
+    public void loadImage(File photosDir) throws IOException {
+        File imageFile = new File(photosDir, getImageFileName());
         if (imageFile.exists()) {
             try (FileInputStream stream = new FileInputStream(imageFile)) {
                 photo = BitmapFactory.decodeStream(stream);
@@ -141,3 +143,5 @@ class Student {
         }
     }
 }
+//TODO: 1. Fix identifier for students in MainActivity
+// 2. Store File in an accessible Dir. Will require permission to write  & read.
